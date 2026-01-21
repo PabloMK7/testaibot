@@ -83,7 +83,7 @@ jobs:
               owner,
               repo,
               issue_number: issue.number,
-              body: 'Verification successful. Pull request has been reopened',
+              body: 'Verification successful. Pull request has been reopened. You may also edit your PR description to remove the block of text.',
             });
 
             await removeLabel();
