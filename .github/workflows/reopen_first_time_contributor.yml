@@ -11,6 +11,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    if: github.event.issue.pull_request && contains(github.event.issue.labels.*.name, 'needs verification')
     steps:
       - name: Verify and reopen PR
         uses: actions/github-script@v7
@@ -21,16 +22,15 @@ jobs:
             const comment = context.payload.comment;
             const label = 'needs verification';
 
-            if (!issue.pull_request) return;
-
             const { data: pr } = await github.rest.pulls.get({
               owner,
               repo,
               pull_number: issue.number,
             });
-
-            const hasLabel = pr.labels.some(l => l.name === label);
-            if (!hasLabel) return;
+            
+            if (comment.user.login !== pr.user.login) {
+              return;
+            }
 
             const { data: user } = await github.rest.users.getByUsername({
               username: pr.user.login,
@@ -49,10 +49,6 @@ jobs:
                   name: label,
                 });
               } catch {}
-            }
-
-            if (comment.user.login !== pr.user.login) {
-              return;
             }
 
             const verified =

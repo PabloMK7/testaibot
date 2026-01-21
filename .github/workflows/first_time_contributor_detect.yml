@@ -9,7 +9,7 @@ permissions:
   issues: write
 
 jobs:
-  gate:
+  detect:
     runs-on: ubuntu-latest
     if: >-
       (github.repository == 'PabloMK7/testaibot') &&
